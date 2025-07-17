@@ -1,48 +1,93 @@
 body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #e0f7f9;
+  color: #03363d;
+}
+
+#app {
   display: flex;
   height: 100vh;
-  overflow: hidden;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-#sidebar {
+.sidebar {
   width: 250px;
-  background: #b2f0e6; /* turquesa bebé */
-  overflow-y: auto;
-  border-right: 1px solid #8fdcd1;
+  background: #b2ebf2;
+  padding: 1rem;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
 }
 
-#main {
+.sidebar h2 {
+  margin-top: 0;
+  font-size: 18px;
+  color: #004d40;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  padding: 0.5rem;
+  background: #e0f7f9;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.sidebar button {
+  width: 100%;
+  background: #4dd0e1;
+  border: none;
+  padding: 0.5rem;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.contenido {
   flex: 1;
+  padding: 2rem;
+}
+
+form {
   display: flex;
   flex-direction: column;
-  background: #e0faf7;
+  gap: 1rem;
 }
 
-#chat-area {
-  flex: 1;
-  overflow-y: auto;
-  padding: 10px;
-}
-
-#upload-form {
-  border-top: 1px solid #8fdcd1;
-  padding: 10px;
-  background: #ccf5ef;
-}
-
-.flashcard {
+textarea, input {
+  padding: 0.7rem;
+  border-radius: 5px;
+  border: 1px solid #80deea;
   background: #ffffff;
-  border: 1px solid #96e2d7;
-  border-radius: 8px;
-  padding: 10px;
-  margin: 10px 0;
+  font-size: 16px;
+  resize: vertical;
 }
 
-.flashcard-answer {
-  display: none;
-  background: #f1fffe;
-  padding: 8px;
-  border-radius: 6px;
-  margin-top: 5px;
+button[type="submit"] {
+  background: #00bcd4;
+  color: white;
+  border: none;
+  padding: 0.8rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+button[type="submit"]:hover {
+  background: #0097a7;
+}
+
+.resultado {
+  margin-top: 2rem;
+  white-space: pre-wrap;
+  background: #ffffff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  font-size: 15px;
 }
