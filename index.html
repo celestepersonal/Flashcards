@@ -2,24 +2,26 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Generador de Flashcards AI</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div id="app">
+  <div class="container">
     <aside class="sidebar">
-      <h2>Chats guardados</h2>
+      <h2>Chats</h2>
       <ul id="chatList"></ul>
-      <button onclick="nuevoChat()">Nuevo Chat</button>
+      <button onclick="nuevoChat()">+ Nuevo chat</button>
     </aside>
-    <main class="contenido">
-      <form id="formulario" onsubmit="procesarTexto(event)">
-        <input type="text" id="chatTitle" placeholder="Nombre del estudio (Ej. Examen 1)" required />
-        <textarea id="texto" placeholder="Pegá aquí tu contenido..." required></textarea>
-        <button type="submit">Generar Flashcards</button>
-      </form>
-      <section id="resultado" class="resultado"></section>
+
+    <main class="main">
+      <h1>Generador de Flashcards</h1>
+      <input type="text" id="chatTitle" placeholder="Nombre del chat (ej: Examen 1)" />
+      <input type="file" id="fileInput" multiple />
+      <button onclick="procesarArchivos()">Generar Flashcards</button>
+
+      <div id="flashcards" class="flashcards"></div>
+      <button onclick="descargarFlashcards()">Descargar Flashcards</button>
     </main>
   </div>
   <script src="script.js"></script>
