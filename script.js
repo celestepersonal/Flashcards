@@ -1,70 +1,88 @@
 let chats = [];
-let currentChatId = null;
+let flashcardsActuales = [];
 
-function newChat() {
-  const chatId = Date.now();
-  chats.push({ id: chatId, title: `Chat ${new Date().toLocaleString()}`, flashcards: [] });
-  currentChatId = chatId;
-  renderChatList();
-  renderChat();
-}
-
-function renderChatList() {
-  const list = document.getElementById("chat-history");
-  list.innerHTML = "";
-  chats.forEach(chat => {
-    const item = document.createElement("li");
-    item.className = "list-group-item list-group-item-action";
-    item.textContent = chat.title;
-    item.onclick = () => {
-      currentChatId = chat.id;
-      renderChat();
-    };
-    list.appendChild(item);
-  });
-}
-
-function renderChat() {
-  const chatArea = document.getElementById("chat-area");
-  chatArea.innerHTML = "";
-  const chat = chats.find(c => c.id === currentChatId);
-  if (!chat) return;
-  chat.flashcards.forEach((fc, i) => {
-    const card = document.createElement("div");
-    card.className = "flashcard";
-    card.innerHTML = `
-      <strong>Q${i + 1}:</strong> ${fc.question}<br>
-      <button onclick="this.nextElementSibling.style.display='block'; this.remove();" class="btn btn-sm btn-outline-primary mt-2">Mostrar Respuesta</button>
-      <div class="flashcard-answer">${fc.answer}</div>
-    `;
-    chatArea.appendChild(card);
-  });
-}
-
-document.getElementById("upload-form").addEventListener("submit", function (e) {
-  e.preventDefault();
-  const files = document.getElementById("file-input").files;
-  if (!files.length || currentChatId === null) return;
-  const chat = chats.find(c => c.id === currentChatId);
-  for (let file of files) {
-    const question = `¿Qué contiene el archivo '${file.name}'?`;
-    const answer = `Este archivo es un ejemplo para flashcards. Nombre del archivo: ${file.name}`;
-    chat.flashcards.push({ question, answer });
+function nuevoChat() {
+  const titulo = document.getElementById("chatTitle").value.trim();
+  if (!titulo) {
+    alert("Debes escribir un nombre para el chat");
+    return;
   }
-  renderChat();
-});
+  const chat = { titulo, fecha: new Date().toLocaleString(), flashcards: [] };
+  chats.push(chat);
+  actualizarListaChats();
+  flashcardsActuales = chat.flashcards;
+  document.getElementById("flashcards").innerHTML = "";
+  document.getElementById("chatTitle").value = "";
+}
+
+function actualizarListaChats() {
+  const lista = document.getElementById("chatList");
+  lista.innerHTML = "";
+  chats.forEach((chat, i) => {
+    const li = document.createElement("li");
+    li.textContent = `${chat.titulo}`;
+    li.onclick = () => cargarChat(i);
+    lista.appendChild(li);
+  });
+}
+
+function cargarChat(index) {
+  flashcardsActuales = chats[index].flashcards;
+  renderizarFlashcards();
+}
+
+function procesarArchivos() {
+  const input = document.getElementById("fileInput");
+  const files = input.files;
+
+  if (files.length === 0) {
+    alert("Por favor, selecciona al menos un archivo.");
+    return;
+  }
+
+  for (let file of files) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const contenido = e.target.result;
+      const flashcards = generarFlashcardsDesdeTexto(contenido);
+      flashcards.forEach(card => flashcardsActuales.push(card));
+      renderizarFlashcards();
+    };
+    reader.readAsText(file);
+  }
+}
+
+function generarFlashcardsDesdeTexto(texto) {
+  const oraciones = texto.split(/[\.\n]+/).filter(p => p.trim().length > 10);
+  return oraciones.slice(0, 10).map((oracion, i) => {
+    return {
+      pregunta: `¿Qué se entiende por: "${oracion.trim().substring(0, 50)}..."?`,
+      respuesta: oracion.trim()
+    };
+  });
+}
+
+function renderizarFlashcards() {
+  const contenedor = document.getElementById("flashcards");
+  contenedor.innerHTML = "";
+  flashcardsActuales.forEach(card => {
+    const div = document.createElement("div");
+    div.className = "card";
+    div.innerHTML = `<strong>Pregunta:</strong> ${card.pregunta}<br/><strong>Respuesta:</strong> ${card.respuesta}`;
+    contenedor.appendChild(div);
+  });
+}
 
 function descargarFlashcards() {
-  if (currentChatId === null) return;
-  const chat = chats.find(c => c.id === currentChatId);
-  let content = chat.flashcards.map((fc, i) => `Q${i + 1}: ${fc.question}\nA${i + 1}: ${fc.answer}\n`).join("\n");
-  const blob = new Blob([content], { type: 'text/plain' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `Flashcards_${chat.title.replace(/\\s+/g, '_')}.txt`;
-  a.click();
-}
+  if (flashcardsActuales.length === 0) {
+    alert("No hay flashcards que descargar.");
+    return;
+  }
 
-// Crear el primer chat por defecto
-newChat();
+  const contenido = flashcardsActuales.map(fc => `P: ${fc.pregunta}\nR: ${fc.respuesta}`).join("\n\n");
+  const blob = new Blob([contenido], { type: "text/plain" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "flashcards.txt";
+  link.click();
+}
