@@ -2,32 +2,26 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Flashcards</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Generador de Flashcards AI</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Sidebar de Chats -->
-  <div id="sidebar">
-    <h5 class="p-2">Chats</h5>
-    <ul id="chat-history" class="list-group list-group-flush"></ul>
-    <button class="btn btn-primary m-2" onclick="newChat()">Nuevo Chat</button>
+  <div id="app">
+    <aside class="sidebar">
+      <h2>Chats guardados</h2>
+      <ul id="chatList"></ul>
+      <button onclick="nuevoChat()">Nuevo Chat</button>
+    </aside>
+    <main class="contenido">
+      <form id="formulario" onsubmit="procesarTexto(event)">
+        <input type="text" id="chatTitle" placeholder="Nombre del estudio (Ej. Examen 1)" required />
+        <textarea id="texto" placeholder="Pegá aquí tu contenido..." required></textarea>
+        <button type="submit">Generar Flashcards</button>
+      </form>
+      <section id="resultado" class="resultado"></section>
+    </main>
   </div>
-
-  <!-- Área Principal -->
-  <div id="main">
-    <!-- Área de Flashcards -->
-    <div id="chat-area"></div>
-
-    <!-- Formulario de carga de archivos -->
-    <form id="upload-form">
-      <input type="file" id="file-input" multiple class="form-control mb-2" />
-      <button type="submit" class="btn btn-success">Flashcards</button>
-      <button type="button" class="btn btn-outline-secondary" onclick="descargarFlashcards()">Descargar Flashcards</button>
-    </form>
-  </div>
-
   <script src="script.js"></script>
 </body>
 </html>
